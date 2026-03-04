@@ -36,3 +36,5 @@ class LoginView(APIView):
             },
             'message': 'Login successful'
         }, status=status.HTTP_200_OK) 
+
+

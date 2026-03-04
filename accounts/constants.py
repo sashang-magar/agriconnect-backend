@@ -48,3 +48,13 @@ NEPAL_DISTRICTS = [
 
 # Sort alphabetically for better UX
 NEPAL_DISTRICTS = sorted(NEPAL_DISTRICTS, key=lambda x: x[1])
+
+# Business types for buyers
+BUSINESS_TYPES = [
+    ('RESTAURANT', 'Restaurant'),
+    ('RETAILER', 'Retailer'),
+    ('WHOLESALER', 'Wholesaler'),
+    ('HOTEL', 'Hotel'),
+    ('CATERING', 'Catering Service'),
+    ('PROCESSOR', 'Food Processor'),
+]
