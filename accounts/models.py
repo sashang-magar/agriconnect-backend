@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .constants import NEPAL_DISTRICTS ,BUSINESS_TYPES
+from django.conf import settings
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = [
@@ -15,13 +16,13 @@ class CustomUser(AbstractUser):
 
 
 class FarmerProfile(models.Model):
-    user = models.OneToOneField(CustomUser , on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
     farm_name = models.CharField(max_length=255  , blank=True)
     farm_description = models.TextField(blank=True , null=True)
     is_verified = models.BooleanField(default=False)
 
 class BuyerProfile(models.Model):
-    user = models.OneToOneField(CustomUser , on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
     address = models.TextField(blank=True)
     business_name= models.CharField(max_length=255 , blank=True)
     business_type = models.CharField(max_length=255 ,choices=BUSINESS_TYPES , blank=True)

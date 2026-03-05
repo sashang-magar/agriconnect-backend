@@ -1,10 +1,13 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet 
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.views import APIView
-from accounts.serializers import UserRegistrationSerializer , UserLoginSerializer
+from .serializers import UserRegistrationSerializer , UserLoginSerializer ,FarmerProfileSerializer , BuyerProfileSerializer
 from rest_framework import status
 from rest_framework.permissions import AllowAny ,IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import FarmerProfile , BuyerProfile
+
 class RegisterView(APIView):
     permission_classes=[AllowAny]
 
@@ -38,3 +41,14 @@ class LoginView(APIView):
         }, status=status.HTTP_200_OK) 
 
 
+class FarmerProfileViewSet(RetrieveUpdateAPIView):
+    serializer_class = FarmerProfileSerializer
+
+    def get_object(self):
+        return self.request.user.farmerprofile
+
+class BuyerProfileViewSet(RetrieveUpdateAPIView):
+    serializer_class = BuyerProfileSerializer  
+
+    def get_object(self):
+        return self.request.user.buyerprofile

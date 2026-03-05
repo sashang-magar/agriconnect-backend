@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from .models import CustomUser
+from .models import CustomUser , FarmerProfile , BuyerProfile
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import authenticate
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(required = True , write_only=True,validators = [validate_password])
@@ -62,3 +63,29 @@ class UserLoginSerializer(serializers.Serializer):
         attrs['user'] = user
         return attrs
 
+class FarmerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        username = serializers.CharField(source='user.username',read_only=True) #source as they are not in Farmer model
+        phone = serializers.CharField(source='user.phone',read_only=True)
+        email = serializers.CharField(source='user.email',read_only=True)
+        district = serializers.CharField(source='user.district',read_only=True)
+
+        model = FarmerProfile
+        fields = ['id' ,'username' , 'phone' , 'email' ,'district', 'farm_name' , 'farm_description' , 'is_verified']
+        read_only_fields = [
+            'id',
+            'is_verified'
+        ]
+
+class BuyerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        username = serializers.CharField(source='user.username',read_only=True) #source as they are not in Farmer model
+        phone = serializers.CharField(source='user.phone',read_only=True)
+        email = serializers.CharField(source='user.email',read_only=True)
+        district = serializers.CharField(source='user.district',read_only=True)
+
+        model = BuyerProfile
+        fields = ['id' , 'username' , 'phone' , 'email' ,'district','address' , 'business_name' , 'business_type']  
+        read_only_field = [
+            'id'
+        ]      
