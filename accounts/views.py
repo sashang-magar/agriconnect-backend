@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny ,IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import FarmerProfile , BuyerProfile
+from .permissions import IsFarmer
 
 class RegisterView(APIView):
     permission_classes=[AllowAny]
@@ -42,12 +43,14 @@ class LoginView(APIView):
 
 
 class FarmerProfileViewSet(RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated , IsFarmer]
     serializer_class = FarmerProfileSerializer
 
     def get_object(self):
         return self.request.user.farmerprofile
 
 class BuyerProfileViewSet(RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = BuyerProfileSerializer  
 
     def get_object(self):

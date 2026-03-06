@@ -64,12 +64,11 @@ class UserLoginSerializer(serializers.Serializer):
         return attrs
 
 class FarmerProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username',read_only=True) #source as they are not in Farmer model
+    phone = serializers.CharField(source='user.phone',read_only=True)
+    email = serializers.CharField(source='user.email',read_only=True)
+    district = serializers.CharField(source='user.district',read_only=True)
     class Meta:
-        username = serializers.CharField(source='user.username',read_only=True) #source as they are not in Farmer model
-        phone = serializers.CharField(source='user.phone',read_only=True)
-        email = serializers.CharField(source='user.email',read_only=True)
-        district = serializers.CharField(source='user.district',read_only=True)
-
         model = FarmerProfile
         fields = ['id' ,'username' , 'phone' , 'email' ,'district', 'farm_name' , 'farm_description' , 'is_verified']
         read_only_fields = [
@@ -78,12 +77,11 @@ class FarmerProfileSerializer(serializers.ModelSerializer):
         ]
 
 class BuyerProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username',read_only=True) 
+    phone = serializers.CharField(source='user.phone',read_only=True)
+    email = serializers.CharField(source='user.email',read_only=True)
+    district = serializers.CharField(source='user.district',read_only=True)
     class Meta:
-        username = serializers.CharField(source='user.username',read_only=True) #source as they are not in Farmer model
-        phone = serializers.CharField(source='user.phone',read_only=True)
-        email = serializers.CharField(source='user.email',read_only=True)
-        district = serializers.CharField(source='user.district',read_only=True)
-
         model = BuyerProfile
         fields = ['id' , 'username' , 'phone' , 'email' ,'district','address' , 'business_name' , 'business_type']  
         read_only_field = [
