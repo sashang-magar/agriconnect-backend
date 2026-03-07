@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third-party apps
+    'accounts',
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'marketplace',
     
     
 ]
@@ -143,3 +144,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
 }
+
+#Image handel
+MEDIA_ROOT = BASE_DIR / 'media' #automatically creates:project/media
+MEDIA_URL = '/media/'
