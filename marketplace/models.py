@@ -22,13 +22,12 @@ class Product(models.Model):
         ('LEGUMES', 'Legumes/Pulses'),
         ('OILSEEDS', 'Oilseeds'),
         ('OTHERS', 'Others'),
-
     ]
     farmer = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE,related_name='products')
 
     name = models.CharField(max_length=255)
     unit = models.CharField(max_length=10 , choices=UNIT_CHOICES,default='KG') #measurement (KG, liter)
-    quantity = models.DecimalField(decimal_places=2 , max_digits=10,validators=[MinValueValidator(0.01)])
+    stock = models.DecimalField(decimal_places=2 , max_digits=10,validators=[MinValueValidator(0.01)])
     unit_price = models.DecimalField(decimal_places=2 , max_digits=10,validators=[MinValueValidator(0.01)]) #Price per unit
     category = models.CharField(max_length=50 , choices=CATEGORY_CHOICES ,default='VEGETABLES')
     district = models.CharField(max_length=50, blank=True,null=True, help_text="Location where product is available")
@@ -37,5 +36,31 @@ class Product(models.Model):
     image = models.ImageField(blank=True , null=True ,upload_to='product_photos/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+  
+class Order(models.Model):
+    PAYMENT_STATUS_PENDING = 'P'
+    PAYMENT_STATUS_COMPLETE = 'C'
+    PAYMENT_STATUS_FAILED = 'F'
+    PAYMENT_STATUS = [
+        (PAYMENT_STATUS_PENDING ,'Pending'),
+        (PAYMENT_STATUS_COMPLETE , 'Complete'),
+        (PAYMENT_STATUS_FAILED , 'Failed')
+    ]
 
-    
+    PAYMENT_METHOD_CHOICES = [
+        ('COD', 'Cash on Delivery'),
+        ('BANK', 'Bank Transfer'),
+        ('ESEWA', 'eSewa'),
+    ]
+    user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
+    payment_status = models.CharField(max_length=1 ,choices=PAYMENT_STATUS ,default=PAYMENT_STATUS_PENDING)
+    delivery_address = models.TextField()
+    payment_method = models.CharField(max_length=50 , choices=PAYMENT_METHOD_CHOICES , default='COD')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order , on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product , on_delete=models.CASCADE)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    unit_price = models.DecimalField(decimal_places=2 , max_digits=10)
