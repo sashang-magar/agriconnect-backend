@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from .serializers import ProductSerializer
-from .models import Product
+from .serializers import OrderSerializer, ProductSerializer , UpdateOrderSerializer ,CreateOrderSerializer
+from .models import Order, Product
 from .permissions import IsOwnerOrAdminOrReadOnly
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
@@ -26,7 +26,7 @@ class ProductViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(farmer=self.request.user)
 
-    # Farmer dashboard = GET /products/my_products/
+    # Farmer dashboard = GET /products/my_products/ @action used for extra endpoints
     @action(detail=False, methods=['get'])
     def my_products(self, request):
         products = Product.objects.filter(farmer=request.user)
@@ -35,3 +35,17 @@ class ProductViewSet(ModelViewSet):
     #request.user=logged-in user
     #serializer.save(farmer=request.user)=assigns owner to product
     #Customer.objects.get(user=request.user)=get user's profile model
+
+class OrderViewSet(ModelViewSet):
+    #permission_classes =[]
+    queryset = Order.objects.all() 
+    serializer_class = OrderSerializer   
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateOrderSerializer
+
+        if self.action in ['update', 'partial_update']:
+            return UpdateOrderSerializer
+
+        return OrderSerializer
