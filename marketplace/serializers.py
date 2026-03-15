@@ -5,7 +5,7 @@ from django.db import transaction
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id' ,'name' ,'unit' , 'quantity' , 'unit_price' ,'category' , 'district','image' , 'harvest_date']
+        fields = ['id' ,'name' ,'unit' , 'stock' , 'unit_price' ,'category' , 'district','image' , 'harvest_date']
         read_only_fields = ['id','farmer']
 
 
@@ -41,11 +41,13 @@ class OrderSerializer(serializers.ModelSerializer):
 class UpdateOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['payment_status']     
+        fields = ['payment_status'] 
+
+         
 
 class CreateOrderSerializer(serializers.Serializer):      
-        items = serializers.ListField()
-        delivery_address = serializers.CharField()
+        items = serializers.ListField(child=serializers.DictField())
+        delivery_address = serializers.CharField() 
         payment_method = serializers.CharField()
 
         def validate(self, attrs):
@@ -88,5 +90,9 @@ class CreateOrderSerializer(serializers.Serializer):
 
                     product.stock -= quantity
                     product.save()
-
+        
             return order
+        def to_representation(self, instance):
+                """This method controls how the created order is serialized in the response"""
+                # Use the OrderSerializer to format the response properly
+                return OrderSerializer(instance, context=self.context).data    
