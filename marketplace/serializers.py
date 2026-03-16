@@ -45,7 +45,7 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
 
          
 
-class CreateOrderSerializer(serializers.Serializer):      
+class CreateOrderSerializer(serializers.Serializer): #input -> Create order -> return order so used def to_representation    
         items = serializers.ListField(child=serializers.DictField())
         delivery_address = serializers.CharField() 
         payment_method = serializers.CharField()
@@ -94,5 +94,5 @@ class CreateOrderSerializer(serializers.Serializer):
             return order
         def to_representation(self, instance):
                 """This method controls how the created order is serialized in the response"""
-                # Use the OrderSerializer to format the response properly
+                # Tell DRF to use OrderSerializer for output
                 return OrderSerializer(instance, context=self.context).data    

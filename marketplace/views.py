@@ -53,7 +53,7 @@ class OrderViewSet(ModelViewSet):
     
     @action(detail=False , methods=['get'])
     def my_order(self , request):
-        if request.user != 'BUYER':
+        if request.user.role != 'BUYER':
             return Response({'error':'Only buyer can access their product'} , status=status.HTTP_403_FORBIDDEN)
         
         orders = Order.objects.filter(user = request.user).prefetch_related('items', 'items__product', 'items__product__farmer')
@@ -62,10 +62,10 @@ class OrderViewSet(ModelViewSet):
 
     @action(detail=False , methods=['get'])
     def incoming_order(self , request):
-        if request.user != ['FARMER']:
+        if request.user.role != 'FARMER': #compare string with string
             return Response({'error':'Only farmers can access incoming orders'} , status=status.HTTP_403_FORBIDDEN)
 
-        orders = Order.objects.filter(user  =request.user).prefetch_related( 
+        orders = Order.objects.filter(items__product__farmer=request.user).distinct().prefetch_related( 
             'items', 
             'items__product', 
             'items__product__farmer',
