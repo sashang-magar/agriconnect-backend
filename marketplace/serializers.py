@@ -43,6 +43,17 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['payment_status'] 
 
+    def validate_payment_status(self , value):
+        request = self.context["request"]
+        user = self.request.user   
+        order = self.instance #current order
+        current_status = order.payment_status
+
+        if user.role == 'BUYER':
+            if not (current_status =='PENDING' and value == 'CANCELLED'):
+                raise serializers.ValidationError("Buyers can only cancel pending orders.")
+ 
+
          
 
 class CreateOrderSerializer(serializers.Serializer): #input -> Create order -> return order so used def to_representation    
