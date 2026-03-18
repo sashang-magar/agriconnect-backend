@@ -38,6 +38,14 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
   
 class Order(models.Model):
+    # Order Status using TextChoices 
+    class OrderStatus(models.TextChoices):
+        PENDING = 'PENDING', 'Pending'
+        ACCEPTED = 'ACCEPTED', 'Accepted'
+        REJECTED = 'REJECTED', 'Rejected'
+        COMPLETED = 'COMPLETED', 'Completed'
+        CANCELLED = 'CANCELLED', 'Cancelled'
+
     PAYMENT_STATUS_PENDING = 'P'
     PAYMENT_STATUS_COMPLETE = 'C'
     PAYMENT_STATUS_FAILED = 'F'
@@ -54,6 +62,11 @@ class Order(models.Model):
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
     payment_status = models.CharField(max_length=1 ,choices=PAYMENT_STATUS ,default=PAYMENT_STATUS_PENDING)
+    order_status = models.CharField(
+        max_length=20,
+        choices=OrderStatus.choices,
+        default=OrderStatus.PENDING
+    )
     delivery_address = models.TextField()
     payment_method = models.CharField(max_length=50 , choices=PAYMENT_METHOD_CHOICES , default='COD')
     created_at = models.DateTimeField(auto_now_add=True)

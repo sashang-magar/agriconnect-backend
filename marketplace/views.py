@@ -52,11 +52,13 @@ class OrderViewSet(ModelViewSet):
         return OrderSerializer
     
     @action(detail=False , methods=['get'])
+    # STEP 1: Check if the user is a BUYER
     def my_order(self , request):
         if request.user.role != 'BUYER':
             return Response({'error':'Only buyer can access their product'} , status=status.HTTP_403_FORBIDDEN)
-        
+        # STEP 2: Get all orders placed by this specific user
         orders = Order.objects.filter(user = request.user).prefetch_related('items', 'items__product', 'items__product__farmer')
+        # STEP 4: Convert orders to JSON format
         serializer = OrderSerializer(orders ,many = True )
         return Response(serializer.data)
 

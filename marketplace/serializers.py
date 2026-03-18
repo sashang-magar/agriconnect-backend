@@ -34,24 +34,34 @@ class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True,read_only=True)
     class Meta :
         model = Order
-        fields = ['id','user','payment_status' ,'payment_method','delivery_address','created_at', 'updated_at','items' ]
+        fields = ['id','user','payment_status','order_status' ,'payment_method','delivery_address','created_at', 'updated_at','items' ]
         read_only_fields = ['id' , 'user' ,'created_at', 'updated_at']
 
  
 class UpdateOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['payment_status'] 
+        fields = ['payment_status','order_status'] 
 
-    def validate_payment_status(self , value):
-        request = self.context["request"]
-        user = self.request.user   
+    def validate_order_status(self , value):
+        user = self.context['request'].user 
         order = self.instance #current order
-        current_status = order.payment_status
+        current_status = order.order_status
 
         if user.role == 'BUYER':
+            if order.user != user:
+                raise serializers.ValidationError('Not your order')
             if not (current_status =='PENDING' and value == 'CANCELLED'):
                 raise serializers.ValidationError("Buyers can only cancel pending orders.")
+            
+        elif  user.role == 'FARMER':
+            if not order.items.filter(product__farmer=user).exists():
+                raise serializers.ValidationError("Not your products in this order")  
+            
+        elif user.role == 'ADMIN':
+            pass  # Admin can do anything
+
+        return value    
  
 
          
