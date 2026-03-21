@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .constants import NEPAL_DISTRICTS ,BUSINESS_TYPES
 from django.conf import settings
+from django.core.validators import MinValueValidator
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = [
@@ -20,6 +21,16 @@ class FarmerProfile(models.Model):
     farm_name = models.CharField(max_length=255  , blank=True)
     farm_description = models.TextField(blank=True , null=True)
     is_verified = models.BooleanField(default=False)
+
+    total_review = models.IntegerField( blank=True , null=True , default=0)
+    total_rating_sum = models.IntegerField( default=0 , blank=True , null=True )
+    average_rating = models.DecimalField(max_digits=3 , decimal_places=2 , default=0.00)
+
+    def update_rating(self):
+        """Update rating based on all reviews"""
+        from marketplace.models import Review  # Import here to avoid circular import
+
+        
 
 class BuyerProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , related_name="buyerprofile")

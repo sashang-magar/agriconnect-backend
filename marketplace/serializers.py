@@ -24,11 +24,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
     def get_total_price(self , order_item:OrderItem):
         return order_item.quantity * order_item.unit_price    
 
-    # def validate_quantity(self , value):
-    #     if value <= 0 :
-    #         raise serializers.ValidationError('Quantity must be greater than zero.')  
-    #     return value
-
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True,read_only=True)

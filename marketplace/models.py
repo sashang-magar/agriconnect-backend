@@ -79,3 +79,18 @@ class OrderItem(models.Model):
     unit_price = models.DecimalField(decimal_places=2 , max_digits=10)
 
     
+class Review(models.Model):
+    order  = models.OneToOneField(Order , on_delete=models.CASCADE , related_name="review")
+    RATING_CHOICES = [
+        (1 , '1 - Poor'),
+        (2 , '2 - Fair'),
+        (3 , '3 - Good'),
+        (4 , '4 - Very Good'),
+        (5 , '5 - Excellence'),
+    ]
+    comment = models.TextField()
+    rating = models.IntegerField( choices=RATING_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.CASCADE , related_name="review_given")
+    farmer = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.CASCADE,related_name='review_received')
+    

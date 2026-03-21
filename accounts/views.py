@@ -6,7 +6,6 @@ from .serializers import UserRegistrationSerializer , UserLoginSerializer ,Farme
 from rest_framework import status
 from rest_framework.permissions import AllowAny ,IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import FarmerProfile , BuyerProfile
 from .permissions import IsFarmer
 
 class RegisterView(APIView):
