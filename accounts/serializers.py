@@ -70,10 +70,11 @@ class FarmerProfileSerializer(serializers.ModelSerializer):
     district = serializers.CharField(source='user.district',read_only=True)
     class Meta:
         model = FarmerProfile
-        fields = ['id' ,'username' , 'phone' , 'email' ,'district', 'farm_name' , 'farm_description' , 'is_verified']
+        fields = ['id' ,'username' , 'phone' , 'email' ,'district', 'farm_name' , 'farm_description' ,
+                   'is_verified','total_reviews' ,'total_rating_sum','average_rating']
         read_only_fields = [
             'id',
-            'is_verified'
+            'is_verified','total_reviews', 'total_rating_sum', 'average_rating'
         ]
 
 class BuyerProfileSerializer(serializers.ModelSerializer):

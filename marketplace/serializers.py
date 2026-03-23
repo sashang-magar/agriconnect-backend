@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product , Order ,OrderItem
+from .models import Product , Order ,OrderItem, Review
 from django.db import transaction
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -112,3 +112,23 @@ class CreateOrderSerializer(serializers.Serializer): #input -> Create order -> r
                 """This method controls how the created order is serialized in the response"""
                 # Tell DRF to use OrderSerializer for output
                 return OrderSerializer(instance, context=self.context).data    
+        
+
+class ReviewSerializer(serializers.ModelSerializer):
+        
+        """Serializer for reading reviews"""
+        reviewer_name = serializers.CharField(source='reviewer.username', read_only=True)
+        reviewer_phone = serializers.CharField(source='reviewer.phone', read_only=True)
+        farmer_name = serializers.CharField(source='farmer.username', read_only=True)
+        order_id = serializers.CharField(source='order.order_id', read_only=True)
+        class Meta:
+            model = Review
+            fields = [
+                'id', 'order', 'order_id', 
+                'reviewer', 'reviewer_name', 'reviewer_phone',
+                'farmer', 'farmer_name',
+                'rating', 'comment', 
+                'created_at', 'updated_at'
+            ]
+            read_only_fields = ['id', 'reviewer', 'farmer', 'created_at', 'updated_at']
+    

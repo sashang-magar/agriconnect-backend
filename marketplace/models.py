@@ -86,9 +86,9 @@ class Review(models.Model):
         (2 , '2 - Fair'),
         (3 , '3 - Good'),
         (4 , '4 - Very Good'),
-        (5 , '5 - Excellence'),
+        (5 , '5 - Excellent'),
     ]
-    comment = models.TextField()
+    comment = models.TextField(blank=True)
     rating = models.IntegerField( choices=RATING_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     reviewer = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.CASCADE , related_name="review_given")
